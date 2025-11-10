@@ -2,25 +2,30 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>&lt;model-viewer&gt; — Responsive & Estético</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>&lt;model-viewer&gt; — Responsive & Perfecto</title>
 
-    <!-- Fuente moderna -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
       rel="stylesheet"
     />
 
     <style>
       :root {
-        --bg1: #0f172a; /* azul muy oscuro */
-        --bg2: #07112a; /* azul profundo */
-        --card-bg: rgba(255, 255, 255, 0.04);
-        --glass: rgba(255, 255, 255, 0.06);
-        --accent: linear-gradient(135deg, #7c3aed, #06b6d4);
-        --muted: rgba(255, 255, 255, 0.7);
+        --bg-900: #071129;
+        --bg-800: #0b1a2b;
+        --glass: rgba(255, 255, 255, 0.04);
+        --glass-2: rgba(255, 255, 255, 0.03);
+        --accent-1: #7c3aed; /* purple */
+        --accent-2: #06b6d4; /* cyan */
+        --white: #ffffff;
+        --muted: rgba(255, 255, 255, 0.78);
+        --soft-shadow: 0 12px 40px rgba(2, 6, 23, 0.6);
       }
-
       * {
         box-sizing: border-box;
       }
@@ -30,164 +35,277 @@
         margin: 0;
         font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
           "Helvetica Neue", Arial;
+        color: var(--muted);
+        background: linear-gradient(180deg, var(--bg-900), var(--bg-800));
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        color: var(--muted);
-        background: radial-gradient(
-            1200px 600px at 10% 10%,
-            rgba(12, 8, 54, 0.7),
-            transparent
-          ),
-          linear-gradient(180deg, var(--bg1), var(--bg2));
       }
 
-      /* contenedor centrado */
+      /* page layout */
       .wrap {
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 32px;
+        padding: 28px;
       }
 
-      /* tarjeta principal */
+      /* main card */
       .card {
-        width: min(1100px, 96vw);
+        width: min(1200px, 98vw);
+        border-radius: 20px;
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 22px;
         background: linear-gradient(
           180deg,
           rgba(255, 255, 255, 0.02),
           rgba(255, 255, 255, 0.01)
         );
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6),
-          inset 0 1px 0 rgba(255, 255, 255, 0.02);
-        display: grid;
-        grid-template-columns: 1fr 360px;
-        gap: 22px;
-        align-items: center;
+        box-shadow: var(--soft-shadow);
+        backdrop-filter: blur(6px);
       }
 
-      /* columna media (modelo) */
+      /* viewer column */
       .viewer-wrap {
-        background: var(--card-bg);
-        padding: 14px;
-        border-radius: 12px;
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
+        padding: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
+      }
+
+      /* nice framed border + responsive sizing */
+      .viewer-frame {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.25),
+          rgba(0, 0, 0, 0.12)
+        );
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
       }
 
       model-viewer {
         width: 100%;
         height: 100%;
-        aspect-ratio: 16/10;
-        border-radius: 12px;
-        overflow: hidden;
         display: block;
-        box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+        border-radius: 10px;
+        aspect-ratio: 16/10;
       }
 
-      /* columna derecha: info + controles */
+      /* desktop hover effect: lift the viewer slightly */
+      @media (hover: hover) {
+        .viewer-wrap:hover {
+          transform: translateY(-6px);
+          transition: transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+      }
+
+      /* right panel */
       .panel {
-        padding: 16px;
+        padding: 18px;
         border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         background: linear-gradient(
           180deg,
           rgba(255, 255, 255, 0.02),
           rgba(255, 255, 255, 0.01)
         );
-        min-height: 220px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+        min-height: 260px;
       }
-
       .title {
-        font-weight: 700;
         font-size: 20px;
-        color: #ffffff;
-        margin: 0 0 4px 0;
+        color: var(--white);
+        margin: 0;
+        font-weight: 700;
       }
-      .subtitle {
+      .desc {
         font-size: 13px;
         color: rgba(255, 255, 255, 0.6);
-        margin: 0 0 12px 0;
+        margin: 0;
       }
 
-      /* controles flotantes: mute/play */
+      .meta {
+        display: flex;
+        gap: 12px;
+        margin-top: 6px;
+      }
+      .meta .box {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.01),
+          rgba(255, 255, 255, 0.005)
+        );
+        font-size: 13px;
+      }
+      .meta .val {
+        color: var(--white);
+        font-weight: 700;
+        margin-top: 6px;
+      }
+
+      /* controls */
       .controls {
         display: flex;
         gap: 8px;
         margin-top: auto;
       }
-
       .btn {
-        appearance: none;
         border: 0;
-        background: transparent;
-        color: var(--muted);
         padding: 10px;
         border-radius: 10px;
+        background: transparent;
+        color: var(--muted);
         cursor: pointer;
         display: inline-grid;
         place-items: center;
-        transition: all 0.18s ease;
         box-shadow: 0 6px 18px rgba(2, 6, 23, 0.5);
+        transition: transform 0.14s ease;
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+      }
+      .btn.primary {
+        background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+        color: white;
+        padding: 10px 14px;
+      }
+
+      /* floating HUD (top-right) */
+      .hud {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        z-index: 6;
+      }
+      .hud .circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: inline-grid;
+        place-items: center;
         background: linear-gradient(
           180deg,
           rgba(255, 255, 255, 0.02),
           rgba(255, 255, 255, 0.01)
         );
-      }
-      .btn:hover {
-        transform: translateY(-3px);
+        backdrop-filter: blur(4px);
       }
 
-      .btn.primary {
-        background: var(--accent);
+      /* fallback big play overlay for mobile */
+      .overlay-play {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 8;
+        display: none;
+      }
+      .overlay-play button {
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-weight: 700;
+        border: 0;
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
         color: white;
-        padding: 10px 14px;
-        font-weight: 600;
+        box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
       }
 
-      /* estado pequeño para pantallas móviles */
+      /* mobile: adapt layout to single column and overlay controls */
       @media (max-width: 980px) {
         .card {
           grid-template-columns: 1fr;
-          padding: 16px;
-          gap: 16px;
-        }
-        model-viewer {
-          aspect-ratio: 16/11;
-        }
-      }
-
-      @media (max-width: 520px) {
-        .card {
-          border-radius: 12px;
-          padding: 12px;
+          gap: 12px;
+          padding: 14px;
         }
         model-viewer {
           aspect-ratio: 4/3;
         }
         .panel {
-          min-height: unset;
+          order: 2;
+        }
+        .viewer-wrap {
+          order: 1;
+          padding: 12px;
+        }
+        .hud {
+          top: 10px;
+          right: 10px;
+        }
+        .overlay-play {
+          display: none;
         }
       }
 
-      /* iconos */
-      .icon {
-        width: 18px;
-        height: 18px;
-        display: block;
+      /* small phones: make overlay play visible, panel becomes bottom sheet */
+      @media (max-width: 520px) {
+        .card {
+          padding: 10px;
+          border-radius: 12px;
+        }
+        .panel {
+          position: relative;
+          padding: 14px;
+          border-radius: 12px;
+        }
+        .overlay-play {
+          display: block;
+        }
+        .hud {
+          right: 8px;
+          top: 8px;
+        }
+        .meta {
+          flex-direction: column;
+        }
       }
 
-      /* micro-leyenda */
+      /* small UI touches */
       .hint {
         font-size: 12px;
         color: rgba(255, 255, 255, 0.5);
+      }
+      .small {
+        font-size: 13px;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* AR button styling inside model-viewer slot (falls back to external style) */
+      model-viewer::part(ar-button) {
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-weight: 700;
       }
     </style>
   </head>
@@ -195,62 +313,70 @@
   <body>
     <div class="wrap">
       <main class="card" role="main">
-        <section class="viewer-wrap" aria-label="Vista 3D">
-          <!-- audio oculto (sin controls) -->
-          <audio id="bg-audio" loop preload="auto">
-            <source src="./maths.mp3" type="audio/mpeg" />
-            Tu navegador no soporta audio en línea.
-          </audio>
-
-          <model-viewer
-            id="mv"
-            src="stage5.glb"
-            ar
-            ar-modes="webxr scene-viewer quick-look"
-            camera-controls
-            shadow-intensity="0.95"
-            shadow-softness="0.44"
-            exposure="1.51"
-            autoplay
-            camera-orbit="-270.3deg 87.17deg 258.5m"
-            field-of-view="30deg"
-            poster="poster.webp"
-          >
-            <div class="progress-bar hide" slot="progress-bar">
-              <div class="update-bar"></div>
-            </div>
-            <button slot="ar-button" id="ar-button">Ver en tu espacio</button>
-            <div id="ar-prompt">
-              <img
-                src="https://modelviewer.dev/shared-assets/icons/hand.png"
-                alt="instrucción"
-              />
-            </div>
-          </model-viewer>
-
-          <!-- botón flotante para des/activar sonido y fallback en caso de autoplay bloqueado -->
-          <div
-            style="
-              position: absolute;
-              right: 14px;
-              top: 14px;
-              display: flex;
-              gap: 8px;
-            "
-          >
+        <section class="viewer-wrap" aria-label="Visor 3D">
+          <!-- overlay play for mobile (initially hidden; JS toggles) -->
+          <div class="overlay-play" id="overlayPlay">
             <button
-              id="mute-toggle"
-              class="btn"
-              aria-pressed="false"
-              title="Activar / Desactivar sonido"
+              id="overlayPlayBtn"
+              aria-label="Reproducir audio y activar escena"
             >
-              <!-- icono muted (se cambiará con JS) -->
+              Reproducir
+            </button>
+          </div>
+
+          <!-- floating HUD (mute & AR quick) -->
+          <div class="hud" aria-hidden="false">
+            <div class="circle" id="arQuick" title="Abrir en AR">
               <svg
-                id="mute-icon"
-                class="icon"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <path
+                  d="M12 2v4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12 18v4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M4 12h4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M16 12h4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+
+            <button
+              class="circle"
+              id="muteToggle"
+              aria-pressed="false"
+              aria-label="activar sonido"
+            >
+              <svg
+                id="muteSvg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
               >
                 <path
                   d="M5 9v6h4l5 4V5L9 9H5z"
@@ -260,7 +386,7 @@
                   stroke-linejoin="round"
                 />
                 <path
-                  id="cross"
+                  id="x"
                   d="M17 7l4 4m0-4l-4 4"
                   stroke="currentColor"
                   stroke-width="1.6"
@@ -270,62 +396,75 @@
                 />
               </svg>
             </button>
+          </div>
 
-            <button
-              id="fallback-play"
-              class="btn primary"
-              style="display: none"
-              aria-hidden="true"
+          <!-- audio (hidden but playable). playsinline for iOS; webkitPlaysInline set via JS for safety -->
+          <audio id="bgAudio" preload="auto" loop playsinline>
+            <source src="./maths.mp3" type="audio/mpeg" />
+            Tu navegador no soporta audio en línea.
+          </audio>
+
+          <div class="viewer-frame" id="viewerFrame">
+            <model-viewer
+              id="mv"
+              src="stage5.glb"
+              poster="poster.webp"
+              ar
+              ar-modes="webxr scene-viewer quick-look"
+              camera-controls
+              interaction-prompt="auto"
+              shadow-intensity="0.95"
+              shadow-softness="0.44"
+              exposure="1.51"
+              autoplay
+              camera-orbit="-270.3deg 87.17deg 258.5m"
+              field-of-view="30deg"
             >
-              Reproducir
-            </button>
+              <button slot="ar-button" id="ar-button">Ver en tu espacio</button>
+            </model-viewer>
           </div>
         </section>
 
-        <aside class="panel" aria-label="Información">
+        <aside class="panel" aria-label="Controles e información">
           <div>
-            <h1 class="title">Escena — Stage 5</h1>
-            <p class="subtitle">
-              Interactúa con el modelo 3D. En móviles puedes abrirlo en AR (si
-              tu dispositivo lo soporta).
+            <h1 class="title">Stage 5 — Interactivo</h1>
+            <p class="desc">
+              Modelo optimizado para web. Compatible con AR en dispositivos
+              modernos. Experiencia móvil mejorada: overlay de reproducción,
+              controles táctiles grandes y diseño adaptativo.
             </p>
             <p class="hint">
-              Diseño responsive, control discreto de audio y fallback si el
-              autoplay está bloqueado.
+              Consejo: en iOS activa sonido desde el centro de control si el
+              autoplay falla.
             </p>
           </div>
 
-          <div
-            style="
-              display: flex;
-              gap: 8px;
-              align-items: center;
-              margin-top: 8px;
-            "
-          >
-            <div style="flex: 1">
-              <div style="font-size: 12px; color: rgba(255, 255, 255, 0.55)">
-                Exposición
-              </div>
-              <div style="font-weight: 600; color: #fff; margin-top: 6px">
-                1.51
-              </div>
+          <div class="meta">
+            <div class="box">
+              <div class="small">Exposición</div>
+              <div class="val">1.51</div>
             </div>
-            <div style="flex: 1">
-              <div style="font-size: 12px; color: rgba(255, 255, 255, 0.55)">
-                Sombra
-              </div>
-              <div style="font-weight: 600; color: #fff; margin-top: 6px">
-                0.95
-              </div>
+            <div class="box">
+              <div class="small">Sombra</div>
+              <div class="val">0.95</div>
             </div>
           </div>
 
           <div class="controls">
-            <button class="btn" id="reset-camera" title="Reset cámara">
+            <button id="resetCam" class="btn" title="Reset cámara">
               Reset
             </button>
-            <button class="btn" id="fit-view" title="Ajustar vista">Fit</button>
+            <button id="fitModel" class="btn" title="Ajustar a vista">
+              Fit
+            </button>
+            <button
+              id="downloadBtn"
+              class="btn primary"
+              title="Descargar glTF"
+              style="margin-left: auto"
+            >
+              Descargar
+            </button>
           </div>
         </aside>
       </main>
@@ -337,73 +476,161 @@
     ></script>
 
     <script>
-      const audio = document.getElementById("bg-audio");
-      const muteBtn = document.getElementById("mute-toggle");
-      const muteIcon = document.getElementById("mute-icon");
-      const fallback = document.getElementById("fallback-play");
+      // referencias DOM
+      const bgAudio = document.getElementById("bgAudio");
+      const muteToggle = document.getElementById("muteToggle");
+      const overlay = document.getElementById("overlayPlay");
+      const overlayBtn = document.getElementById("overlayPlayBtn");
+      const arQuick = document.getElementById("arQuick");
       const mv = document.getElementById("mv");
+      const downloadBtn = document.getElementById("downloadBtn");
 
-      // estado inicial: silenciado para evitar bloqueo estricto en algunos navegadores
-      audio.muted = true;
+      // mejoras para iOS Safari
+      try {
+        bgAudio.setAttribute("playsinline", "");
+        bgAudio.setAttribute("webkit-playsinline", "");
+        bgAudio.webkitPlaysInline = true;
+      } catch (e) {}
 
-      // Intenta reproducir al cargar
-      window.addEventListener("load", async () => {
+      // start logic: robust autoplay strategy
+      async function tryAutoplay() {
+        // si ya está sonando, nada que hacer
+        if (!bgAudio) return false;
         try {
-          await audio.play();
-          // si logra reproducir estando muted, intentamos desmutear suavemente
-          setTimeout(() => {
-            // desmutear sólo si el navegador lo permite
-            audio.muted = false;
-            updateMuteIcon(false);
-          }, 200);
+          // preferimos sin mute si es posible
+          bgAudio.muted = false;
+          await bgAudio.play();
+          onAudioPlaySuccess();
+          return true;
         } catch (err) {
-          // autoplay bloqueado: mostramos botón de fallback
-          fallback.style.display = "inline-grid";
-          console.warn("Autoplay bloqueado:", err);
+          // intento con muted first
+          try {
+            bgAudio.muted = true;
+            await bgAudio.play();
+            // algunos navegadores permiten desmutear después de un timeout
+            setTimeout(() => {
+              try {
+                bgAudio.muted = false;
+              } catch (e) {}
+            }, 250);
+            onAudioPlaySuccess();
+            return true;
+          } catch (err2) {
+            // autoplay completamente bloqueado
+            showOverlay(true);
+            return false;
+          }
         }
-      });
-
-      // fallback play button (para cuando autoplay fue bloqueado)
-      fallback.addEventListener("click", async () => {
-        try {
-          await audio.play();
-          audio.muted = false;
-          fallback.style.display = "none";
-          updateMuteIcon(false);
-        } catch (e) {
-          console.warn("No se pudo reproducir:", e);
-        }
-      });
-
-      // toggle mute/unmute
-      let isMuted = audio.muted;
-      function updateMuteIcon(m) {
-        isMuted = !!m;
-        muteBtn.setAttribute("aria-pressed", String(!isMuted));
-        muteIcon.innerHTML = isMuted
-          ? `<!-- muted icon -->\n            <path d="M5 9v6h4l5 4V5L9 9H5z" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            <path d=\"M17 7l4 4m0-4l-4 4\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.9\"/>`
-          : `<!-- sound icon -->\n            <path d=\"M5 9v6h4l5 4V5L9 9H5z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            <path d=\"M19 9a7 7 0 0 1 0 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>`;
       }
 
-      muteBtn.addEventListener("click", () => {
-        // si no se ha empezado a reproducir, intentamos arrancar
-        if (audio.paused) {
-          audio.play().catch(() => {});
-        }
-        audio.muted = !audio.muted;
-        updateMuteIcon(audio.muted);
+      function onAudioPlaySuccess() {
+        showOverlay(false);
+        updateMuteButton(!bgAudio.muted);
+      }
+
+      function showOverlay(visible) {
+        overlay.style.display = visible ? "block" : "none";
+      }
+
+      // inicializar
+      window.addEventListener("load", () => {
+        tryAutoplay();
       });
 
-      updateMuteIcon(audio.muted);
+      // si hay interacción del usuario (touch o click) intentamos reproducir otra vez
+      ["touchstart", "click"].forEach((ev) => {
+        window.addEventListener(
+          ev,
+          async function one() {
+            await tryAutoplay();
+            window.removeEventListener(ev, one);
+          },
+          { passive: true }
+        );
+      });
 
-      // botones extra: reset cámara y fit view (usando API de model-viewer)
-      document.getElementById("reset-camera").addEventListener("click", () => {
+      // overlay button (móvil) para lanzar reproducción
+      overlayBtn &&
+        overlayBtn.addEventListener("click", async () => {
+          try {
+            await bgAudio.play();
+            bgAudio.muted = false;
+            showOverlay(false);
+            updateMuteButton(false);
+          } catch (e) {
+            console.warn("play error", e);
+          }
+        });
+
+      // toggle mute
+      function updateMuteButton(isMuted) {
+        muteToggle.setAttribute("aria-pressed", String(!isMuted));
+        const svg = document.getElementById("muteSvg");
+        if (isMuted) {
+          // show muted icon (with X)
+          svg.innerHTML =
+            '<path d="M5 9v6h4l5 4V5L9 9H5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 7l4 4m0-4l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
+        } else {
+          // show sound waves
+          svg.innerHTML =
+            '<path d="M5 9v6h4l5 4V5L9 9H5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 9a7 7 0 0 1 0 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
+        }
+      }
+
+      muteToggle.addEventListener("click", async () => {
+        // si no ha empezado a reproducir, intenta arrancar
+        if (bgAudio.paused)
+          try {
+            await bgAudio.play();
+          } catch (e) {}
+        bgAudio.muted = !bgAudio.muted;
+        updateMuteButton(bgAudio.muted);
+      });
+
+      // quick AR click proxies to model-viewer AR button when available
+      arQuick &&
+        arQuick.addEventListener("click", () => {
+          const arBtn = document.getElementById("ar-button");
+          if (arBtn) arBtn.click();
+        });
+
+      // camera controls
+      document.getElementById("resetCam").addEventListener("click", () => {
         mv.cameraOrbit = "-270.3deg 87.17deg 258.5m";
         mv.jumpCameraToGoal();
       });
-
-      document.getElementById("fit-view").addEventListener("click", () => {
+      document.getElementById("fitModel").addEventListener("click", () => {
         mv.fitCameraToModel();
+      });
+
+      // download (simple link to model file) — sustituye según tu configuración de servidor
+      downloadBtn.addEventListener("click", () => {
+        const a = document.createElement("a");
+        a.href = "stage5.glb";
+        a.download = "stage5.glb";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      });
+
+      // UX: detect if on small screen to show overlay play prominently
+      function isSmall() {
+        return window.matchMedia("(max-width:520px)").matches;
+      }
+      if (isSmall()) showOverlay(true);
+
+      // mantener preferencia del usuario en localStorage (mute)
+      try {
+        const saved = localStorage.getItem("bgAudioMuted");
+        if (saved !== null) {
+          bgAudio.muted = saved === "true";
+        }
+      } catch (e) {}
+      // guardar al cambiar
+      bgAudio.addEventListener("volumechange", () => {
+        try {
+          localStorage.setItem("bgAudioMuted", String(bgAudio.muted));
+        } catch (e) {}
       });
     </script>
   </body>
