@@ -398,7 +398,7 @@
             <model-viewer
               id="mv"
               src="stage5.glb"
-              poster="poster.png"
+              poster="poster.webp"
               ar
               ar-modes="webxr scene-viewer quick-look"
               camera-controls
@@ -417,8 +417,12 @@
 
         <aside class="panel" aria-label="Controles e información">
           <div>
-            <h1 class="title">Cube V3 Experience</h1>
-            <p class="desc"></p>
+            <h1 class="title">Stage 5 — Interactivo</h1>
+            <p class="desc">
+              Modelo optimizado para web. Compatible con AR en dispositivos
+              modernos. Experiencia móvil mejorada: overlay de reproducción,
+              controles táctiles grandes y diseño adaptativo.
+            </p>
             <p class="hint">
               Consejo: en iOS activa sonido desde el centro de control si el
               autoplay falla.
@@ -442,6 +446,14 @@
             </button>
             <button id="fitModel" class="btn" title="Ajustar a vista">
               Fit
+            </button>
+            <button
+              id="toAR"
+              class="btn"
+              title="Ir a AR"
+              onclick="location.href='deadmau5.html'"
+            >
+              Abrir AR
             </button>
             <button
               id="downloadBtn"

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>AR — Negro & Rojo</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-900: #000000;
+        --bg-800: #0b0b0b;
+        --accent: #e53935;
+        --accent-2: #b71c1c;
+        --white: #fff;
+        --muted: rgba(255, 255, 255, 0.78);
+        --glass: rgba(255, 255, 255, 0.02);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+        background: linear-gradient(180deg, var(--bg-900), var(--bg-800));
+        color: var(--muted);
+      }
+
+      /* HUD */
+      .hud {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        display: flex;
+        gap: 10px;
+        z-index: 999;
+      }
+      .circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: inline-grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+      }
+      .brand-cta {
+        position: fixed;
+        left: 14px;
+        top: 14px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: var(--white);
+        font-weight: 700;
+        z-index: 999;
+        cursor: pointer;
+        border: 0;
+      }
+
+      /* small note */
+      .note {
+        position: fixed;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%);
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.5);
+        color: var(--muted);
+        font-size: 13px;
+        z-index: 999;
+      }
+
+      a {
+        color: inherit;
+      }
+    </style>
+
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+  </head>
+
+  <body style="margin: 0; overflow: hidden">
+    <button class="brand-cta" onclick="location.href='index.html'">
+      Abrir Visor 3D
+    </button>
+
+    <div class="hud" aria-hidden="false">
+      <div class="circle" id="goViewer" title="Ir al visor">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M4 7h16v10H4z"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <a-scene
+      vr-mode-ui="enabled: false;"
+      loading-screen="enabled: false;"
+      renderer="logarithmicDepthBuffer: true;"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      id="scene"
+      embedded
+      gesture-detector
+    >
+      <a-assets>
+        <a-asset-item id="animated-asset" src="assets/asset.glb"></a-asset-item>
+      </a-assets>
+
+      <a-marker
+        id="animated-marker"
+        type="pattern"
+        preset="custom"
+        url="assets/marker.patt"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+      >
+        <a-entity
+          id="bowser-model"
+          scale="0.483217383568414 0.483217383568414 0.483217383568414"
+          animation-mixer="loop: repeat"
+          gltf-model="#animated-asset"
+          class="clickable"
+          gesture-handler
+        ></a-entity>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <div class="note">
+      Toca el marcador en cámara para activar la animación. Usa el botón
+      superior para volver al visor 3D.
+    </div>
+
+    <script>
+      // enlace rápido desde HUD
+      document.getElementById("goViewer").addEventListener("click", () => {
+        location.href = "model-viewer-red-black.html";
+      });
+    </script>
+  </body>
+</html>
