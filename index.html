@@ -3,112 +3,408 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>&lt;model-viewer&gt; template</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <title>&lt;model-viewer&gt; — Responsive & Estético</title>
+
+    <!-- Fuente moderna -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-      /* oculta visualmente el elemento audio pero lo mantiene accesible y reproducible */
-      audio#bg-audio {
-        position: absolute;
-        left: -9999px;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
+      :root {
+        --bg1: #0f172a; /* azul muy oscuro */
+        --bg2: #07112a; /* azul profundo */
+        --card-bg: rgba(255, 255, 255, 0.04);
+        --glass: rgba(255, 255, 255, 0.06);
+        --accent: linear-gradient(135deg, #7c3aed, #06b6d4);
+        --muted: rgba(255, 255, 255, 0.7);
       }
 
-      /* estilo del botón que aparece si autoplay es bloqueado */
-      #enable-sound {
-        position: fixed;
-        right: 12px;
-        bottom: 12px;
-        z-index: 9999;
-        padding: 8px 12px;
-        border-radius: 8px;
-        background: rgba(0, 0, 0, 0.65);
-        color: #fff;
-        border: none;
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--muted);
+        background: radial-gradient(
+            1200px 600px at 10% 10%,
+            rgba(12, 8, 54, 0.7),
+            transparent
+          ),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+      }
+
+      /* contenedor centrado */
+      .wrap {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+      }
+
+      /* tarjeta principal */
+      .card {
+        width: min(1100px, 96vw);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 22px;
+        align-items: center;
+      }
+
+      /* columna media (modelo) */
+      .viewer-wrap {
+        background: var(--card-bg);
+        padding: 14px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      model-viewer {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 16/10;
+        border-radius: 12px;
+        overflow: hidden;
+        display: block;
+        box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+      }
+
+      /* columna derecha: info + controles */
+      .panel {
+        padding: 16px;
+        border-radius: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .title {
+        font-weight: 700;
+        font-size: 20px;
+        color: #ffffff;
+        margin: 0 0 4px 0;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0 0 12px 0;
+      }
+
+      /* controles flotantes: mute/play */
+      .controls {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+      }
+
+      .btn {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        padding: 10px;
+        border-radius: 10px;
         cursor: pointer;
-        font-family: system-ui, sans-serif;
-        font-size: 14px;
+        display: inline-grid;
+        place-items: center;
+        transition: all 0.18s ease;
+        box-shadow: 0 6px 18px rgba(2, 6, 23, 0.5);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+      }
+
+      .btn.primary {
+        background: var(--accent);
+        color: white;
+        padding: 10px 14px;
+        font-weight: 600;
+      }
+
+      /* estado pequeño para pantallas móviles */
+      @media (max-width: 980px) {
+        .card {
+          grid-template-columns: 1fr;
+          padding: 16px;
+          gap: 16px;
+        }
+        model-viewer {
+          aspect-ratio: 16/11;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .card {
+          border-radius: 12px;
+          padding: 12px;
+        }
+        model-viewer {
+          aspect-ratio: 4/3;
+        }
+        .panel {
+          min-height: unset;
+        }
+      }
+
+      /* iconos */
+      .icon {
+        width: 18px;
+        height: 18px;
+        display: block;
+      }
+
+      /* micro-leyenda */
+      .hint {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
       }
     </style>
   </head>
+
   <body>
-    <!-- audio sin UI (sin controls) -->
-    <audio id="bg-audio" loop preload="auto">
-      <source src="./maths.mp3" type="audio/mpeg" />
-    </audio>
+    <div class="wrap">
+      <main class="card" role="main">
+        <section class="viewer-wrap" aria-label="Vista 3D">
+          <!-- audio oculto (sin controls) -->
+          <audio id="bg-audio" loop preload="auto">
+            <source src="./maths.mp3" type="audio/mpeg" />
+            Tu navegador no soporta audio en línea.
+          </audio>
 
-    <!-- your model-viewer and other markup -->
-    <model-viewer
-      src="stage5.glb"
-      ar
-      ar-modes="webxr scene-viewer quick-look"
-      camera-controls
-      tone-mapping="neutral"
-      poster="poster.webp"
-      shadow-intensity="0.95"
-      shadow-softness="0.44"
-      exposure="1.51"
-      autoplay
-      camera-orbit="-270.3deg 87.17deg 258.5m"
-      field-of-view="30deg"
-    >
-      <div class="progress-bar hide" slot="progress-bar">
-        <div class="update-bar"></div>
-      </div>
-      <button slot="ar-button" id="ar-button">View in your space</button>
-      <div id="ar-prompt">
-        <img src="https://modelviewer.dev/shared-assets/icons/hand.png" />
-      </div>
-    </model-viewer>
+          <model-viewer
+            id="mv"
+            src="stage5.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="0.95"
+            shadow-softness="0.44"
+            exposure="1.51"
+            autoplay
+            camera-orbit="-270.3deg 87.17deg 258.5m"
+            field-of-view="30deg"
+            poster="poster.webp"
+          >
+            <div class="progress-bar hide" slot="progress-bar">
+              <div class="update-bar"></div>
+            </div>
+            <button slot="ar-button" id="ar-button">Ver en tu espacio</button>
+            <div id="ar-prompt">
+              <img
+                src="https://modelviewer.dev/shared-assets/icons/hand.png"
+                alt="instrucción"
+              />
+            </div>
+          </model-viewer>
 
-    <script>
-      const audio = document.getElementById("bg-audio");
+          <!-- botón flotante para des/activar sonido y fallback en caso de autoplay bloqueado -->
+          <div
+            style="
+              position: absolute;
+              right: 14px;
+              top: 14px;
+              display: flex;
+              gap: 8px;
+            "
+          >
+            <button
+              id="mute-toggle"
+              class="btn"
+              aria-pressed="false"
+              title="Activar / Desactivar sonido"
+            >
+              <!-- icono muted (se cambiará con JS) -->
+              <svg
+                id="mute-icon"
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5 9v6h4l5 4V5L9 9H5z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  id="cross"
+                  d="M17 7l4 4m0-4l-4 4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  opacity="0.9"
+                />
+              </svg>
+            </button>
 
-      // Intenta reproducir al cargar la página
-      window.addEventListener("load", async () => {
-        // algunas plataformas necesitan playsInline
-        audio.playsInline = true;
+            <button
+              id="fallback-play"
+              class="btn primary"
+              style="display: none"
+              aria-hidden="true"
+            >
+              Reproducir
+            </button>
+          </div>
+        </section>
 
-        try {
-          await audio.play();
-          // si llega aquí, el audio comenzó
-          console.log("Audio reproduciéndose automáticamente");
-        } catch (err) {
-          console.warn("Autoplay bloqueado o falló:", err);
+        <aside class="panel" aria-label="Información">
+          <div>
+            <h1 class="title">Escena — Stage 5</h1>
+            <p class="subtitle">
+              Interactúa con el modelo 3D. En móviles puedes abrirlo en AR (si
+              tu dispositivo lo soporta).
+            </p>
+            <p class="hint">
+              Diseño responsive, control discreto de audio y fallback si el
+              autoplay está bloqueado.
+            </p>
+          </div>
 
-          // Intentamos forzar un autoplay silenciado para "arrancar" la reproducción,
-          // y luego intentamos quitar el mute (esto puede o no funcionar dependiendo del navegador).
-          try {
-            audio.muted = true;
-            await audio.play();
-            // intento de desmutear después de un breve lapso (no garantizado)
-            setTimeout(() => {
-              audio.muted = false;
-            }, 200);
-          } catch (err2) {
-            // si sigue bloqueado, mostramos un botón discreto para que el usuario active el audio
-            const btn = document.createElement("button");
-            btn.id = "enable-sound";
-            btn.textContent = "Tocar audio";
-            btn.addEventListener("click", async () => {
-              try {
-                audio.muted = false;
-                await audio.play();
-                btn.remove();
-              } catch (e) {
-                console.warn("No se pudo reproducir aún:", e);
-              }
-            });
-            document.body.appendChild(btn);
-          }
-        }
-      });
-    </script>
+          <div
+            style="
+              display: flex;
+              gap: 8px;
+              align-items: center;
+              margin-top: 8px;
+            "
+          >
+            <div style="flex: 1">
+              <div style="font-size: 12px; color: rgba(255, 255, 255, 0.55)">
+                Exposición
+              </div>
+              <div style="font-weight: 600; color: #fff; margin-top: 6px">
+                1.51
+              </div>
+            </div>
+            <div style="flex: 1">
+              <div style="font-size: 12px; color: rgba(255, 255, 255, 0.55)">
+                Sombra
+              </div>
+              <div style="font-weight: 600; color: #fff; margin-top: 6px">
+                0.95
+              </div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button class="btn" id="reset-camera" title="Reset cámara">
+              Reset
+            </button>
+            <button class="btn" id="fit-view" title="Ajustar vista">Fit</button>
+          </div>
+        </aside>
+      </main>
+    </div>
 
     <script
       type="module"
       src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
     ></script>
+
+    <script>
+      const audio = document.getElementById("bg-audio");
+      const muteBtn = document.getElementById("mute-toggle");
+      const muteIcon = document.getElementById("mute-icon");
+      const fallback = document.getElementById("fallback-play");
+      const mv = document.getElementById("mv");
+
+      // estado inicial: silenciado para evitar bloqueo estricto en algunos navegadores
+      audio.muted = true;
+
+      // Intenta reproducir al cargar
+      window.addEventListener("load", async () => {
+        try {
+          await audio.play();
+          // si logra reproducir estando muted, intentamos desmutear suavemente
+          setTimeout(() => {
+            // desmutear sólo si el navegador lo permite
+            audio.muted = false;
+            updateMuteIcon(false);
+          }, 200);
+        } catch (err) {
+          // autoplay bloqueado: mostramos botón de fallback
+          fallback.style.display = "inline-grid";
+          console.warn("Autoplay bloqueado:", err);
+        }
+      });
+
+      // fallback play button (para cuando autoplay fue bloqueado)
+      fallback.addEventListener("click", async () => {
+        try {
+          await audio.play();
+          audio.muted = false;
+          fallback.style.display = "none";
+          updateMuteIcon(false);
+        } catch (e) {
+          console.warn("No se pudo reproducir:", e);
+        }
+      });
+
+      // toggle mute/unmute
+      let isMuted = audio.muted;
+      function updateMuteIcon(m) {
+        isMuted = !!m;
+        muteBtn.setAttribute("aria-pressed", String(!isMuted));
+        muteIcon.innerHTML = isMuted
+          ? `<!-- muted icon -->\n            <path d="M5 9v6h4l5 4V5L9 9H5z" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            <path d=\"M17 7l4 4m0-4l-4 4\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.9\"/>`
+          : `<!-- sound icon -->\n            <path d=\"M5 9v6h4l5 4V5L9 9H5z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            <path d=\"M19 9a7 7 0 0 1 0 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>`;
+      }
+
+      muteBtn.addEventListener("click", () => {
+        // si no se ha empezado a reproducir, intentamos arrancar
+        if (audio.paused) {
+          audio.play().catch(() => {});
+        }
+        audio.muted = !audio.muted;
+        updateMuteIcon(audio.muted);
+      });
+
+      updateMuteIcon(audio.muted);
+
+      // botones extra: reset cámara y fit view (usando API de model-viewer)
+      document.getElementById("reset-camera").addEventListener("click", () => {
+        mv.cameraOrbit = "-270.3deg 87.17deg 258.5m";
+        mv.jumpCameraToGoal();
+      });
+
+      document.getElementById("fit-view").addEventListener("click", () => {
+        mv.fitCameraToModel();
+      });
+    </script>
   </body>
 </html>
