@@ -16,15 +16,16 @@
 
     <style>
       :root {
-        --bg-900: #071129;
-        --bg-800: #0b1a2b;
-        --glass: rgba(255, 255, 255, 0.04);
-        --glass-2: rgba(255, 255, 255, 0.03);
-        --accent-1: #7c3aed; /* purple */
-        --accent-2: #06b6d4; /* cyan */
+        --bg-900: #000000;
+        --bg-800: #0b0b0b;
+        --glass: rgba(255, 255, 255, 0.03);
+        --glass-2: rgba(255, 255, 255, 0.02);
+        --accent: #e53935; /* red */
+        --accent-2: #b71c1c; /* dark red */
         --white: #ffffff;
         --muted: rgba(255, 255, 255, 0.78);
-        --soft-shadow: 0 12px 40px rgba(2, 6, 23, 0.6);
+        --muted-2: rgba(255, 255, 255, 0.6);
+        --soft-shadow: 0 18px 50px rgba(0, 0, 0, 0.75);
       }
       * {
         box-sizing: border-box;
@@ -53,15 +54,15 @@
       /* main card */
       .card {
         width: min(1200px, 98vw);
-        border-radius: 20px;
+        border-radius: 16px;
         padding: 18px;
         display: grid;
         grid-template-columns: 1fr 380px;
-        gap: 22px;
+        gap: 20px;
         background: linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.02),
-          rgba(255, 255, 255, 0.01)
+          rgba(255, 255, 255, 0.01),
+          rgba(255, 255, 255, 0.005)
         );
         box-shadow: var(--soft-shadow);
         backdrop-filter: blur(6px);
@@ -70,29 +71,28 @@
       /* viewer column */
       .viewer-wrap {
         position: relative;
-        border-radius: 14px;
+        border-radius: 12px;
         overflow: hidden;
         padding: 10px;
         background: linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.02),
-          rgba(255, 255, 255, 0.01)
+          rgba(255, 255, 255, 0.01),
+          rgba(255, 255, 255, 0.005)
         );
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
-      /* nice framed border + responsive sizing */
       .viewer-frame {
         width: 100%;
         height: 100%;
         display: block;
-        border-radius: 12px;
+        border-radius: 10px;
         overflow: hidden;
         background: linear-gradient(
           180deg,
-          rgba(0, 0, 0, 0.25),
+          rgba(0, 0, 0, 0.3),
           rgba(0, 0, 0, 0.12)
         );
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
@@ -104,6 +104,7 @@
         display: block;
         border-radius: 10px;
         aspect-ratio: 16/10;
+        background: #080808;
       }
 
       /* desktop hover effect: lift the viewer slightly */
@@ -123,8 +124,8 @@
         gap: 12px;
         background: linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.02),
-          rgba(255, 255, 255, 0.01)
+          rgba(255, 255, 255, 0.01),
+          rgba(255, 255, 255, 0.005)
         );
         min-height: 260px;
       }
@@ -136,7 +137,7 @@
       }
       .desc {
         font-size: 13px;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--muted-2);
         margin: 0;
       }
 
@@ -144,16 +145,13 @@
         display: flex;
         gap: 12px;
         margin-top: 6px;
+        flex-wrap: wrap;
       }
       .meta .box {
         flex: 1;
         padding: 10px;
         border-radius: 10px;
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.01),
-          rgba(255, 255, 255, 0.005)
-        );
+        background: rgba(255, 255, 255, 0.02);
         font-size: 13px;
       }
       .meta .val {
@@ -184,7 +182,7 @@
         transform: translateY(-3px);
       }
       .btn.primary {
-        background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
         color: white;
         padding: 10px 14px;
       }
@@ -205,15 +203,10 @@
         border-radius: 10px;
         display: inline-grid;
         place-items: center;
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.02),
-          rgba(255, 255, 255, 0.01)
-        );
+        background: rgba(255, 255, 255, 0.02);
         backdrop-filter: blur(4px);
       }
 
-      /* fallback big play overlay for mobile */
       .overlay-play {
         position: absolute;
         left: 50%;
@@ -227,12 +220,12 @@
         border-radius: 999px;
         font-weight: 700;
         border: 0;
-        background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
         color: white;
         box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
       }
 
-      /* mobile: adapt layout to single column and overlay controls */
+      /* mobile */
       @media (max-width: 980px) {
         .card {
           grid-template-columns: 1fr;
@@ -258,7 +251,6 @@
         }
       }
 
-      /* small phones: make overlay play visible, panel becomes bottom sheet */
       @media (max-width: 520px) {
         .card {
           padding: 10px;
@@ -281,10 +273,9 @@
         }
       }
 
-      /* small UI touches */
       .hint {
         font-size: 12px;
-        color: rgba(255, 255, 255, 0.5);
+        color: var(--muted-2);
       }
       .small {
         font-size: 13px;
@@ -301,7 +292,6 @@
         border: 0;
       }
 
-      /* AR button styling inside model-viewer slot (falls back to external style) */
       model-viewer::part(ar-button) {
         border-radius: 12px;
         padding: 10px 12px;
@@ -408,7 +398,7 @@
             <model-viewer
               id="mv"
               src="stage5.glb"
-              poster="poster.webp"
+              poster="poster.png"
               ar
               ar-modes="webxr scene-viewer quick-look"
               camera-controls
@@ -427,12 +417,8 @@
 
         <aside class="panel" aria-label="Controles e información">
           <div>
-            <h1 class="title">Stage 5 — Interactivo</h1>
-            <p class="desc">
-              Modelo optimizado para web. Compatible con AR en dispositivos
-              modernos. Experiencia móvil mejorada: overlay de reproducción,
-              controles táctiles grandes y diseño adaptativo.
-            </p>
+            <h1 class="title">Cube V3 Experience</h1>
+            <p class="desc"></p>
             <p class="hint">
               Consejo: en iOS activa sonido desde el centro de control si el
               autoplay falla.
@@ -441,12 +427,12 @@
 
           <div class="meta">
             <div class="box">
-              <div class="small">Exposición</div>
-              <div class="val">1.51</div>
+              <div class="small">Formato</div>
+              <div class="val">GLB (binary)</div>
             </div>
             <div class="box">
-              <div class="small">Sombra</div>
-              <div class="val">0.95</div>
+              <div class="small">Tamaño</div>
+              <div class="val">~2.4 MB</div>
             </div>
           </div>
 
@@ -613,7 +599,7 @@
         a.remove();
       });
 
-      // UX: detect if on small screen to show overlay play prominently
+      // UX: detect if on small screen to show overlay play prominenly
       function isSmall() {
         return window.matchMedia("(max-width:520px)").matches;
       }
