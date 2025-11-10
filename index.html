@@ -1,14 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
-    <title>&lt;model-viewer&gt; template</title>
     <meta charset="utf-8" />
-    <meta name="description" content="&lt;model-viewer&gt; template" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link type="text/css" href="./styles.css" rel="stylesheet" />
+    <title>&lt;model-viewer&gt; template</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      /* oculta visualmente el elemento audio pero lo mantiene accesible y reproducible */
+      audio#bg-audio {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+
+      /* estilo del botón que aparece si autoplay es bloqueado */
+      #enable-sound {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+        z-index: 9999;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.65);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+      }
+    </style>
   </head>
   <body>
-    <!-- <model-viewer> HTML element -->
+    <!-- audio sin UI (sin controls) -->
+    <audio id="bg-audio" loop preload="auto">
+      <source src="./maths.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- your model-viewer and other markup -->
     <model-viewer
       src="stage5.glb"
       ar
@@ -32,8 +62,50 @@
       </div>
     </model-viewer>
 
-    <script src="script.js"></script>
-    <!-- Loads <model-viewer> for browsers: -->
+    <script>
+      const audio = document.getElementById("bg-audio");
+
+      // Intenta reproducir al cargar la página
+      window.addEventListener("load", async () => {
+        // algunas plataformas necesitan playsInline
+        audio.playsInline = true;
+
+        try {
+          await audio.play();
+          // si llega aquí, el audio comenzó
+          console.log("Audio reproduciéndose automáticamente");
+        } catch (err) {
+          console.warn("Autoplay bloqueado o falló:", err);
+
+          // Intentamos forzar un autoplay silenciado para "arrancar" la reproducción,
+          // y luego intentamos quitar el mute (esto puede o no funcionar dependiendo del navegador).
+          try {
+            audio.muted = true;
+            await audio.play();
+            // intento de desmutear después de un breve lapso (no garantizado)
+            setTimeout(() => {
+              audio.muted = false;
+            }, 200);
+          } catch (err2) {
+            // si sigue bloqueado, mostramos un botón discreto para que el usuario active el audio
+            const btn = document.createElement("button");
+            btn.id = "enable-sound";
+            btn.textContent = "Tocar audio";
+            btn.addEventListener("click", async () => {
+              try {
+                audio.muted = false;
+                await audio.play();
+                btn.remove();
+              } catch (e) {
+                console.warn("No se pudo reproducir aún:", e);
+              }
+            });
+            document.body.appendChild(btn);
+          }
+        }
+      });
+    </script>
+
     <script
       type="module"
       src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
